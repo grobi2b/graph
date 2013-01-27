@@ -19,6 +19,8 @@ public class Edge {
         this.source = source;
         this.target = target;
         this.directed = directed;
+        source.addEdge(this);
+        target.addEdge(this);
     }
 
     public Vertex getSource() {
@@ -28,6 +30,24 @@ public class Edge {
     public Vertex getTarget() {
         return target;
     }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
+    public boolean isVisited() {
+        return visited;
+    }
+
+    public void setVisited(boolean visited) {
+        this.visited = visited;
+    }
     
-    
+    public boolean isLoop() {
+        return source.equals(target);
+    }
 }

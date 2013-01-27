@@ -4,6 +4,7 @@
  */
 package de.jag.inf.sd.graph;
 
+import java.util.HashSet;
 import java.util.Objects;
 
 /**
@@ -12,6 +13,8 @@ import java.util.Objects;
  */
 public class Vertex {
     private final String name;
+    private HashSet<Edge> edges = new HashSet<>();
+    private double distance;
 
     public Vertex(String name) {
         this.name = name;
@@ -19,6 +22,31 @@ public class Vertex {
 
     public String getName() {
         return name;
+    }
+
+    public void addEdge(Edge edge) {
+        edges.add(edge);
+    }
+    
+    public HashSet<Edge> getEdges() {
+        return edges;
+    }
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
+    
+    public boolean allEdgesVisited() {
+        for (Edge edge : edges) {
+            if (!edge.isVisited()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

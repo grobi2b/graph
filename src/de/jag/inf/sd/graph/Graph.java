@@ -36,6 +36,50 @@ public class Graph {
         return null;
     }
 
+    private Vertex getUnvisitedVertexWithSmallestDistance() {
+        Vertex next = null;
+        for (Vertex vertex : vertices) {
+            if (vertex.isVisited()) {
+                continue;
+            }
+            if (next == null || vertex.getDistance() < next.getDistance()) {
+                next = vertex;
+            }
+        }
+        return next;
+    }
+
+    public ArrayList<Vertex> findShortestPath(Vertex start, Vertex end) {
+        for (Vertex vertex : getVertices()) {
+            vertex.setDistance(Double.POSITIVE_INFINITY);
+            vertex.setPredecessor(null);
+        }
+        start.setDistance(0);
+
+        for (Vertex currentVertex = getUnvisitedVertexWithSmallestDistance();
+                currentVertex != null && !currentVertex.equals(end);
+                currentVertex = getUnvisitedVertexWithSmallestDistance()) {
+            currentVertex.setVisited(true);
+            for (Edge edge : currentVertex.getEdges()) {
+                Vertex other = edge.getSource();
+                if (other.equals(currentVertex)) {
+                    other = edge.getTarget();
+                }
+                double distance = currentVertex.getDistance() + edge.getWeight();
+                if (distance < other.getDistance()) {
+                    other.setDistance(distance);
+                    other.setPredecessor(currentVertex);
+                }
+            }
+        }
+
+        ArrayList<Vertex> path = new ArrayList<>();
+        for (Vertex vertex = end; vertex != null; vertex = vertex.getPredecessor()) {
+            path.add(0, vertex);
+        }
+        return path;
+    }
+
     public void printPath(ArrayList<Edge> path) {
         Edge current = null;
         for (Edge next : path) {
@@ -53,7 +97,7 @@ public class Graph {
         }
     }
 
-    private ArrayList<Edge> findCircle(Vertex start) {
+    private ArrayList<Edge> findTour(Vertex start) {
         ArrayList<Edge> path = new ArrayList<>();
         int position = 0;
         Vertex currentVertex = start;
@@ -75,7 +119,7 @@ public class Graph {
         return path;
     }
 
-    public ArrayList<Edge> findEulerCircle(Vertex start) {
+    public ArrayList<Edge> findEulerTour(Vertex start) {
         ArrayList<Edge> path = new ArrayList<>();
 
         for (Edge e : edges) {
@@ -85,9 +129,9 @@ public class Graph {
         Vertex currentVertex = start;
         int position = 0;
 
-        for (ArrayList<Edge> partOfPath = findCircle(currentVertex);
+        for (ArrayList<Edge> partOfPath = findTour(currentVertex);
                 !partOfPath.isEmpty();
-                partOfPath = findCircle(currentVertex)) {
+                partOfPath = findTour(currentVertex)) {
             path.addAll(position, partOfPath);
             position = 0;
             for (Edge edge : path) {
@@ -143,6 +187,10 @@ public class Graph {
         graph.addEdge(de);
         graph.addEdge(ef);
 
-        graph.printPath(graph.findEulerCircle(a));
+        graph.printPath(graph.findEulerTour(a));
+        
+        for (Vertex v : graph.findShortestPath(a, c)) {
+            System.out.println(v.getName());
+        }
     }
 }

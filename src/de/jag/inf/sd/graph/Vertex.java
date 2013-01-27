@@ -15,6 +15,8 @@ public class Vertex {
     private final String name;
     private HashSet<Edge> edges = new HashSet<>();
     private double distance;
+    private boolean visited;
+    private Vertex predecessor;
 
     public Vertex(String name) {
         this.name = name;
@@ -38,6 +40,22 @@ public class Vertex {
 
     public void setDistance(double distance) {
         this.distance = distance;
+    }
+
+    public boolean isVisited() {
+        return visited;
+    }
+
+    public void setVisited(boolean visited) {
+        this.visited = visited;
+    }
+
+    public Vertex getPredecessor() {
+        return predecessor;
+    }
+
+    public void setPredecessor(Vertex predecessor) {
+        this.predecessor = predecessor;
     }
     
     public boolean allEdgesVisited() {
@@ -71,5 +89,34 @@ public class Vertex {
         return true;
     }
     
+    public int getDegree() {
+        return edges.size();
+    }
     
+    public boolean isAdjacentTo(Vertex other) {
+        if (other.equals(this)) {
+            return false;
+        }
+        for (Edge edge : edges) {
+            if (edge.getSource().equals(other)) {
+                return true;
+            }
+            if (edge.getTarget().equals(other)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public HashSet<Vertex> getNeighbors() {
+        HashSet<Vertex> neighbors = new HashSet<>();
+        for (Edge edge : edges) {
+            if (!edge.getSource().equals(this)) {
+                neighbors.add(edge.getSource());
+            } else if (!edge.getTarget().equals(this)) {
+                neighbors.add(edge.getTarget());
+            }
+        }
+        return neighbors;
+    }
 }

@@ -11,7 +11,7 @@ package de.jag.inf.sd.graph;
 public class Edge {
     private final Vertex source;
     private final Vertex target;
-    private double weight = 0;
+    private double weight = 1;
     private final boolean directed;
     private boolean visited = false;
 
